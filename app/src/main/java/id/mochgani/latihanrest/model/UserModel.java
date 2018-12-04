@@ -2,35 +2,39 @@ package id.mochgani.latihanrest.model;
 
 import com.google.gson.annotations.SerializedName;
 
-import id.mochgani.latihanrest.entity.Kontak;
+import java.util.List;
 
-/**
- * Created by mochgani on 03/12/18.
- */
+import id.mochgani.latihanrest.entity.User;
 
-public class PostPutDelKontak {
+public class UserModel {
     @SerializedName("status")
     String status;
     @SerializedName("result")
-    Kontak mKontak;
+    List<User> listUser;
     @SerializedName("message")
     String message;
+
     public String getStatus() {
         return status;
     }
+
     public void setStatus(String status) {
         this.status = status;
     }
+
     public String getMessage() {
         return message;
     }
+
     public void setMessage(String message) {
         this.message = message;
     }
-    public Kontak getKontak() {
-        return mKontak;
+
+    public List<User> getListDataUser() {
+        return listUser;
     }
-    public void setKontak(Kontak Kontak) {
-        mKontak = Kontak;
+
+    public void setListDataKontak(List<User> listUser) {
+        this.listUser = listUser;
     }
 }
