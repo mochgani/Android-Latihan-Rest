@@ -18,16 +18,29 @@ import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import id.mochgani.latihanrest.adapter.KontakAdapter;
 import id.mochgani.latihanrest.database.DatabaseHelper;
+import id.mochgani.latihanrest.entity.Kontak;
 import id.mochgani.latihanrest.entity.User;
+import id.mochgani.latihanrest.model.KontakModel;
+import id.mochgani.latihanrest.rest.ApiClient;
+import id.mochgani.latihanrest.rest.ApiInterface;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class ListActivity extends AppCompatActivity {
+
+    ApiInterface mApiInterface;
 
     private DatabaseHelper mDB;
 
     private String[] pilihan_menu = { "Edit Data", "Hapus Data" };
 
-    private String[] kontak,idKontak;
+    private String[] listNama,listNomor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,6 +48,8 @@ public class ListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_list);
 
         mDB = new DatabaseHelper(this);
+
+        mApiInterface = ApiClient.getClient(mDB.getBaseUrl()).create(ApiInterface.class);
 
         User sessionUser = mDB.getSessionUser();
 
@@ -44,20 +59,38 @@ public class ListActivity extends AppCompatActivity {
         lblNama.setText(sessionUser.getNama());
         lblTelp.setText(sessionUser.getTelepon());
 
-//        idKontak = mDB.getDataAll(0);
-//        kontak = mDB.getDataAll(1);
+        // Construct the data source
+        final ArrayList<Kontak> arrayOfUsers = new ArrayList<>();
 
-//        Cursor cursor;
-        MatrixCursor matrixCursor = new MatrixCursor(new String[] { "nama", "telp" });
-        matrixCursor.addRow(new Object[] { "Abdi", "9989999" });
+        Call<KontakModel> kontakCall = mApiInterface.getKontak();
+        kontakCall.enqueue(new Callback<KontakModel>() {
+            @Override
+            public void onResponse(Call<KontakModel> call, Response<KontakModel>
+                    response) {
+                List<Kontak> kontakList = response.body().getListDataKontak();
 
-        String[] columns = new String[] { "nama", "telp" };
-        int[] to = new int[] { R.id.txtNama, R.id.txtNomor };
-//
-//        SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,R.layout.list_view, matrixCursor, columns, to, 0);
-//        ListView listview =(ListView) findViewById(R.id.listKontak);
-//        listview.setAdapter(adapter);
-//        registerForContextMenu(listview);
+                listNama = new String[kontakList.size()];
+                listNomor = new String[kontakList.size()];
+
+                int i = 0;
+                for (Kontak dataKontak: kontakList) {
+                    arrayOfUsers.add(dataKontak);
+                    listNama[i] = dataKontak.getNama();
+                    listNomor[i] = dataKontak.getNomor();
+                    i++;
+                }
+            }
+
+            @Override
+            public void onFailure(Call<KontakModel> call, Throwable t) {
+                Log.e("Retrofit Get", t.toString());
+            }
+        });
+
+        KontakAdapter adapter = new KontakAdapter(this, arrayOfUsers);
+        ListView listView = (ListView) findViewById(R.id.listKontak);
+        listView.setAdapter(adapter);
+        registerForContextMenu(listView);
 
         Button btnInput = (Button) findViewById(R.id.btnInput);
         btnInput.setOnClickListener(new View.OnClickListener() {
@@ -78,38 +111,38 @@ public class ListActivity extends AppCompatActivity {
         });
     }
 
-//    public void onCreateContextMenu(ContextMenu menu, View tampil, ContextMenu.ContextMenuInfo menuInfo) {
-//        if (tampil.getId() == R.id.listKontak) {
-//            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-//            menu.setHeaderTitle(kontak[info.position]);
-//            for (int i = 0; i < pilihan_menu.length; i++) {
-//                menu.add(Menu.NONE, i, i, pilihan_menu[i]);
-//            }
-//        }
-//    }
-//
-//    public boolean onContextItemSelected(MenuItem item) {
-//        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
-//        String aksi = pilihan_menu[item.getItemId()];
-//        int id = Integer.parseInt(idKontak[info.position]);
-//
-//        if(aksi.equals("Edit Data")){
-//            Intent i = new Intent(ListActivity.this, EditActivity.class);
-//
-//            i.putExtra("idWord", id);
-//            startActivity(i);
-//        } else {
-////            mDB.delete(id);
-//
-//            Toast.makeText(getApplicationContext(),
-//                    "Data Berhasil di Hapus!",
-//                    Toast.LENGTH_LONG).show();
-//
-//            Intent i = new Intent(ListActivity.this, MainActivity.class);
-//            startActivity(i);
-//        }
-//
-//        return true;
-//    }
+    public void onCreateContextMenu(ContextMenu menu, View tampil, ContextMenu.ContextMenuInfo menuInfo) {
+        if (tampil.getId() == R.id.listKontak) {
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+            menu.setHeaderTitle(listNama[info.position]);
+            for (int i = 0; i < pilihan_menu.length; i++) {
+                menu.add(Menu.NONE, i, i, pilihan_menu[i]);
+            }
+        }
+    }
+
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        String aksi = pilihan_menu[item.getItemId()];
+        int id = Integer.parseInt(listNomor[info.position]);
+
+        if(aksi.equals("Edit Data")){
+            Intent i = new Intent(ListActivity.this, EditActivity.class);
+
+            i.putExtra("idWord", id);
+            startActivity(i);
+        } else {
+//            mDB.delete(id);
+
+            Toast.makeText(getApplicationContext(),
+                    "Data Berhasil di Hapus!",
+                    Toast.LENGTH_LONG).show();
+
+            Intent i = new Intent(ListActivity.this, MainActivity.class);
+            startActivity(i);
+        }
+
+        return true;
+    }
 
 }
