@@ -40,7 +40,7 @@ public class ListActivity extends AppCompatActivity {
 
     private String[] pilihan_menu = { "Edit Data", "Hapus Data" };
 
-    private String[] listNama,listNomor;
+    private String[] listNama,listId,listNomor;
 
     public static ListActivity la;
 
@@ -72,6 +72,7 @@ public class ListActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(ListActivity.this, InsertActivity.class));
+                finish();
             }
         });
 
@@ -100,11 +101,13 @@ public class ListActivity extends AppCompatActivity {
                 arrayOfUsers = new ArrayList<>();
                 listNama = new String[kontakList.size()];
                 listNomor = new String[kontakList.size()];
+                listId = new String[kontakList.size()];
 
                 int i = 0;
                 for (Kontak dataKontak: kontakList) {
                     arrayOfUsers.add(dataKontak);
                     listNama[i] = dataKontak.getNama();
+                    listId[i] = dataKontak.getId();
                     listNomor[i] = dataKontak.getNomor();
                     i++;
                 }
@@ -136,15 +139,36 @@ public class ListActivity extends AppCompatActivity {
     public boolean onContextItemSelected(MenuItem item) {
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         String aksi = pilihan_menu[item.getItemId()];
-        int id = Integer.parseInt(listNomor[info.position]);
+        int id = Integer.parseInt(listId[info.position]);
 
         if(aksi.equals("Edit Data")){
             Intent i = new Intent(ListActivity.this, EditActivity.class);
 
-            i.putExtra("idWord", id);
+            i.putExtra("idKontak", listId[info.position]);
+            i.putExtra("namaKontak", listNama[info.position]);
+            i.putExtra("nomorKontak", listNomor[info.position]);
             startActivity(i);
+            finish();
         } else {
-//            mDB.delete(id);
+            Call<KontakModel> deleteKontak = mApiInterface.deleteKontak(String.valueOf(id));
+            deleteKontak.enqueue(new Callback<KontakModel>() {
+                @Override
+                public void onResponse(Call<KontakModel> call, Response<KontakModel> response) {
+                    String status = response.body().getStatus();
+                    String message = response.body().getMessage();
+
+                    Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG).show();
+
+                    if(status.equals("200")){
+                        refresh();
+                    }
+                }
+
+                @Override
+                public void onFailure(Call<KontakModel> call, Throwable t) {
+                    Log.e("Retrofit Get", t.toString());
+                }
+            });
 
             Toast.makeText(getApplicationContext(),
                     "Data Berhasil di Hapus!",

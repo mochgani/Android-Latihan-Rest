@@ -1,77 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/activity_edit"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context="id.mochgani.latihanrest.EditActivity">
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:id="@+id/activity_insert"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context="id.mochgani.latihanrest.EditActivity">
+
     <TextView
         android:id="@+id/tvId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
         android:text="Id Kontak : "
-        android:textSize="20sp"/>
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.029"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/edtId"
+        android:layout_width="0dp"
+        android:layout_height="52dp"
+        android:layout_alignBaseline="@+id/tvId"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_toRightOf="@+id/tvId"
+        android:hint="Id"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvId" />
+
     <TextView
         android:id="@+id/tvNama"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
         android:text="Nama : "
-        android:layout_below="@id/tvId"
-        android:textSize="20sp"/>
-    <TextView
-        android:id="@+id/tvNomor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Nomor : "
-        android:layout_below="@id/tvNama"
-        android:textSize="20sp"/>
-    <EditText
-        android:id="@+id/edtId"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="Id"
-        android:layout_toRightOf="@+id/tvId"
-        android:layout_alignBaseline="@+id/tvId"/>
-    <EditText
-        android:id="@+id/edtNama"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="Nama"
-        android:layout_alignBaseline="@+id/tvNama"
-        android:layout_alignLeft="@+id/edtId"/>
-    <EditText
-        android:id="@+id/edtNomor"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:hint="Nomor"
-        android:layout_alignBaseline="@+id/tvNomor"
-        android:layout_alignLeft="@+id/edtId"
-        android:inputType="date"/>
-    <LinearLayout
-        android:id="@+id/Linearlayout2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_below="@+id/tvNomor"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp">
+        android:textSize="20sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.026"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edtId" />
 
-        <Button
-            android:id="@+id/btUpdate2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Update"/>
+<TextView
+    android:id="@+id/tvNomor"
+    android:layout_width="78dp"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="16dp"
+    android:text="Nomor : "
+    android:textSize="20sp"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintHorizontal_bias="0.0"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/edtNama" />
 
-        <Button
-            android:id="@+id/btDelete2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Delete"/>
-        <Button
-            android:id="@+id/btBackGo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Back"/>
-    </LinearLayout>
-</RelativeLayout>
+<EditText
+    android:id="@+id/edtNama"
+    android:layout_width="0dp"
+    android:layout_height="52dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="8dp"
+    android:hint="Nama"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/tvNama" />
+
+<EditText
+    android:id="@+id/edtNomor"
+    android:layout_width="0dp"
+    android:layout_height="52dp"
+    android:layout_marginEnd="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="8dp"
+    android:hint="Nomor"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/tvNomor" />
+
+    <Button
+        android:id="@+id/btUpdate2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="20dp"
+        android:text="Update"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edtNomor" />
+
+<Button
+    android:id="@+id/btBackGo"
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    android:layout_marginEnd="8dp"
+    android:layout_marginStart="8dp"
+    android:layout_marginTop="8dp"
+    android:text="Back"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintTop_toBottomOf="@+id/btUpdate2" />
+
+
+</android.support.constraint.ConstraintLayout>

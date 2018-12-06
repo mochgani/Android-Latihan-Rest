@@ -22,5 +22,6 @@
         android:paddingRight="10dip"
         android:paddingBottom="10dip"
         android:text="ID" />
+
 </LinearLayout>
 
