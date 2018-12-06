@@ -35,6 +35,13 @@ public class MainActivity extends AppCompatActivity {
 
         if(mDB.cekSession() > 0){
             startActivity(new Intent(MainActivity.this, ListActivity.class));
+
+            try{
+                ListActivity.la.refresh();
+            }catch(NullPointerException e){
+                Log.e("Refresh","NullPointerException Refresh");
+            }
+
             finish();
         }
 
@@ -64,13 +71,20 @@ public class MainActivity extends AppCompatActivity {
                             }
 
                             startActivity(new Intent(MainActivity.this, ListActivity.class));
+
+                            try{
+                                ListActivity.la.refresh();
+                            }catch(NullPointerException e){
+                                Log.e("Refresh","NullPointerException Refresh");
+                            }
+
                             finish();
                         }
                     }
 
                     @Override
                     public void onFailure(Call<UserModel> call, Throwable t) {
-                        Log.e("Retrofit Get", t.toString());
+                        Log.e("Retrofit Get ", t.toString());
                     }
                 });
 

@@ -42,6 +42,14 @@ public class ListActivity extends AppCompatActivity {
 
     private String[] listNama,listNomor;
 
+    public static ListActivity la;
+
+    public ArrayList<Kontak> arrayOfUsers;
+
+    public KontakAdapter adapter;
+
+    public ListView listView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -59,39 +67,6 @@ public class ListActivity extends AppCompatActivity {
         lblNama.setText(sessionUser.getNama());
         lblTelp.setText(sessionUser.getTelepon());
 
-        // Construct the data source
-        final ArrayList<Kontak> arrayOfUsers = new ArrayList<>();
-
-        Call<KontakModel> kontakCall = mApiInterface.getKontak();
-        kontakCall.enqueue(new Callback<KontakModel>() {
-            @Override
-            public void onResponse(Call<KontakModel> call, Response<KontakModel>
-                    response) {
-                List<Kontak> kontakList = response.body().getListDataKontak();
-
-                listNama = new String[kontakList.size()];
-                listNomor = new String[kontakList.size()];
-
-                int i = 0;
-                for (Kontak dataKontak: kontakList) {
-                    arrayOfUsers.add(dataKontak);
-                    listNama[i] = dataKontak.getNama();
-                    listNomor[i] = dataKontak.getNomor();
-                    i++;
-                }
-            }
-
-            @Override
-            public void onFailure(Call<KontakModel> call, Throwable t) {
-                Log.e("Retrofit Get", t.toString());
-            }
-        });
-
-        KontakAdapter adapter = new KontakAdapter(this, arrayOfUsers);
-        ListView listView = (ListView) findViewById(R.id.listKontak);
-        listView.setAdapter(adapter);
-        registerForContextMenu(listView);
-
         Button btnInput = (Button) findViewById(R.id.btnInput);
         btnInput.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,6 +82,43 @@ public class ListActivity extends AppCompatActivity {
                 mDB.deleteUser();
                 startActivity(new Intent(ListActivity.this, MainActivity.class));
                 finish();
+            }
+        });
+
+        refresh();
+        la = this;
+    }
+
+    public void refresh(){
+        Call<KontakModel> kontakCall = mApiInterface.getKontak();
+        kontakCall.enqueue(new Callback<KontakModel>() {
+            @Override
+            public void onResponse(Call<KontakModel> call, Response<KontakModel>
+                    response) {
+                List<Kontak> kontakList = response.body().getListDataKontak();
+
+                arrayOfUsers = new ArrayList<>();
+                listNama = new String[kontakList.size()];
+                listNomor = new String[kontakList.size()];
+
+                int i = 0;
+                for (Kontak dataKontak: kontakList) {
+                    arrayOfUsers.add(dataKontak);
+                    listNama[i] = dataKontak.getNama();
+                    listNomor[i] = dataKontak.getNomor();
+                    i++;
+                }
+
+                adapter = new KontakAdapter(la, arrayOfUsers);
+                listView = (ListView) findViewById(R.id.listKontak);
+                listView.setAdapter(adapter);
+                registerForContextMenu(listView);
+
+            }
+
+            @Override
+            public void onFailure(Call<KontakModel> call, Throwable t) {
+                Log.e("Retrofit Get", t.toString());
             }
         });
     }

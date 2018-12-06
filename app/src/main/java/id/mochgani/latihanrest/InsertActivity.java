@@ -53,6 +53,7 @@ public class InsertActivity extends AppCompatActivity {
 
                         if(status.equals("200")){
                             startActivity(new Intent(InsertActivity.this, ListActivity.class));
+                            ListActivity.la.refresh();
                             finish();
                         }
                     }
@@ -70,6 +71,7 @@ public class InsertActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(InsertActivity.this, ListActivity.class));
+                ListActivity.la.refresh();
                 finish();
             }
         });
